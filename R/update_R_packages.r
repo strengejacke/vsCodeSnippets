@@ -8,6 +8,14 @@ update_R_packages <- function() {
 
   if (any(user_packages)) {
     needs_update <- names(old_packages[, "LibPath"][user_packages])
+    msg <- paste0(
+      "\nInstalling ", length(needs_update), " package",
+      ifelse(length(needs_update) > 1, "s", ""), ": ",
+      datawizard::text_concatenate(needs_update), "\n\n"
+    )
+    insight::print_color(msg, "blue")
     install.packages(needs_update)
+  } else {
+    insight::print_color("\nAll packages are up to date!\n\n", "green")
   }
 }
