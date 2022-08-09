@@ -15,7 +15,7 @@ update_R_packages <- function(unload_namespace = TRUE) {
     }
   }
 
-  old_packages <- old.packages()
+  old_packages <- utils::old.packages()
   user_packages <- grepl(
     paste0("^", dirname(path.expand("~"))),
     old_packages[, "LibPath"]
@@ -29,7 +29,7 @@ update_R_packages <- function(unload_namespace = TRUE) {
       datawizard::text_concatenate(needs_update), "\n\n"
     )
     insight::print_color(msg, "blue")
-    install.packages(needs_update)
+    utils::install.packages(needs_update)
   } else {
     insight::print_color("\nAll packages are up to date!\n\n", "green")
   }
