@@ -27,7 +27,7 @@ update_R_packages <- function(unload_namespace = TRUE) {
   )
 
   if (any(user_packages)) {
-    needs_update <- names(old_packages[, "LibPath"][user_packages])
+    needs_update <- old_packages[, "Package"][user_packages]
     # skip packages that could not be unloaded...
     if (length(could_not_unload)) {
       msg <- paste0(
@@ -47,7 +47,7 @@ update_R_packages <- function(unload_namespace = TRUE) {
         datawizard::text_concatenate(needs_update), "\n\n"
       )
       insight::print_color(msg, "blue")
-      utils::install.packages(needs_update)
+      pak::pkg_install(needs_update)
     }
   } else {
     insight::print_color("\nAll packages are up to date!\n\n", "green")

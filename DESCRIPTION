@@ -1,6 +1,6 @@
 Package: vsCodeSnippets
 Title: Some useful functions that can be called from VS Code via keyboard shortcuts.
-Version: 0.0.1
+Version: 0.0.2
 Maintainer: Daniel Lüdecke <d.luedecke@uke.de>
 Authors@R: 
     person("Daniel", "Lüdecke", , "d.luedecke@uke,de", role = c("aut", "cre"))
