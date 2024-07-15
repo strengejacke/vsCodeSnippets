@@ -1,8 +1,8 @@
 Package: vsCodeSnippets
 Title: Some useful functions that can be called from VS Code via keyboard shortcuts.
-Version: 0.0.2
+Version: 0.0.3
 Maintainer: Daniel Lüdecke <d.luedecke@uke.de>
-Authors@R: 
+Authors@R:
     person("Daniel", "Lüdecke", , "d.luedecke@uke,de", role = c("aut", "cre"))
 Description: Collection of functions for common tasks in R, like updating installed packages.
 License: GPL3
