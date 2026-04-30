@@ -1,7 +1,7 @@
-#' @export
-update_R_packages <- function(unload_namespace = TRUE) {
+update_R_packages <- function(unload_namespace = TRUE, use_pak = FALSE) {
   if (isTRUE(unload_namespace)) {
     loaded_pkgs <- loadedNamespaces()
+    # fmt: skip
     base_pkgs <- c(
       "base", "compiler", "datasets", "graphics", "grDevices", "grid",
       "methods", "parallel", "splines", "stats", "stats4", "tools", "tcltk",
@@ -11,11 +11,10 @@ update_R_packages <- function(unload_namespace = TRUE) {
     could_not_unload <- c()
     if (length(needs_unload)) {
       for (p in needs_unload) {
-        tryCatch(unloadNamespace(p),
-                 error = function(e) {
-                   # remember packages that could not be unloaded.
-                   could_not_unload <- c(could_not_unload, p)
-                 })
+        tryCatch(unloadNamespace(p), error = function(e) {
+          # remember packages that could not be unloaded.
+          could_not_unload <- c(could_not_unload, p)
+        })
       }
     }
   }
@@ -31,7 +30,8 @@ update_R_packages <- function(unload_namespace = TRUE) {
     # skip packages that could not be unloaded...
     if (length(could_not_unload)) {
       msg <- paste0(
-        "\nFollowing package", ifelse(length(could_not_unload) > 1, "s have", "has"),
+        "\nFollowing package",
+        ifelse(length(could_not_unload) > 1, "s have", "has"),
         " updates but could not be unloaded: ",
         toString(could_not_unload)
       )
@@ -40,12 +40,20 @@ update_R_packages <- function(unload_namespace = TRUE) {
     }
     if (length(needs_update)) {
       msg <- paste0(
-        "\nInstalling ", length(needs_update), " package",
-        ifelse(length(needs_update) > 1, "s", ""), ": ",
-        toString(needs_update), "\n\n"
+        "\nInstalling ",
+        length(needs_update),
+        " package",
+        ifelse(length(needs_update) > 1, "s", ""),
+        ": ",
+        toString(needs_update),
+        "\n\n"
       )
       message(msg)
-      pak::pkg_install(needs_update)
+      if (use_pak) {
+        pak::pkg_install(needs_update)
+      } else {
+        utils::install.packages(needs_update)
+      }
     }
   } else {
     message("\nAll packages are up to date!\n")
