@@ -19,14 +19,44 @@ update_R_packages <- function(unload_namespace = TRUE, use_pak = FALSE) {
     }
   }
 
-  old_packages <- utils::old.packages()
+  # check installed and on CRAN available packages
+  installed_packages <- utils::installed.packages()
+  available_packages <- utils::available.packages()
+
+  # remove packages that are not installed by user - these are shipped with
+  # R and annot be updated
   user_packages <- grepl(
     paste0("^", dirname(path.expand("~"))),
-    old_packages[, "LibPath"]
+    installed_packages[, "LibPath"]
   )
 
+  # check if any user installed packages are available
   if (any(user_packages)) {
-    needs_update <- old_packages[, "Package"][user_packages]
+    installed_packages <- installed_packages[user_packages, ]
+
+    # make sure we have same length of installed and available packages
+    # E.g. if user installed packages from GitHub that are not on CRAN,
+    # this will result in "mismatch"
+    can_update <- intersect(
+      available_packages[, "Package"],
+      installed_packages[, "Package"]
+    )
+
+    available_packages <- available_packages[
+      available_packages[, "Package"] %in% can_update,
+    ]
+    installed_packages <- installed_packages[
+      installed_packages[, "Package"] %in% can_update,
+    ]
+
+    # check for old package versions
+    needs_update <- installed_packages[
+      which(
+        installed_packages[, "Version"] < available_packages[, "Version"]
+      ),
+      "Package"
+    ]
+
     # skip packages that could not be unloaded...
     if (length(could_not_unload)) {
       msg <- paste0(
